@@ -11,7 +11,15 @@ export async function POST(
   const { id } = await params;
 
   const entry = await prisma.entry.findUnique({ where: { id } });
-  if (!entry) return NextResponse.json({ error: "Not found" }, { status: 404 });
+  if (!entry)
+    return NextResponse.json(
+      {
+        error: "Not found",
+        code: "NOT_FOUND",
+        docsUrl: "/docs/errors/not-found",
+      },
+      { status: 404 }
+    );
 
   if (entry.isPrivate) {
     const updated = await prisma.entry.update({
